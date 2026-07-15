@@ -5,7 +5,7 @@ export const contactPageContent: ContactPageContent = {
   info: [
     { label: "Kyiv, Ukraine" },
     { label: "+380 50 5937955", href: "tel:+380505937955" },
-    { label: "info@coolin.me", href: "mailto:info@coolin.me" },
+    { label: "vadim.coolin@gmail.com", href: "mailto:vadim.coolin@gmail.com" },
   ],
   social: [
     { label: "LinkedIn", href: "https://www.linkedin.com/in/vadimcoolin/" },
