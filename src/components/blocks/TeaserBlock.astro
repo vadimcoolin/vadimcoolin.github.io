@@ -1,0 +1,47 @@
+---
+import type { TeaserSectionContent } from "../../data/types";
+
+interface Props {
+  content: TeaserSectionContent;
+}
+
+const { content } = Astro.props;
+const mediaUrl = import.meta.env.BASE_URL + "/" + content.media.src.replace(/^\//, "");
+const isVideo = content.mediaType === "video";
+---
+
+<section class="teaser">
+  {
+    isVideo ? (
+      <video class="teaser-media" src={mediaUrl} muted playsinline loop />
+    ) : (
+      <img class="teaser-media" src={mediaUrl} alt={content.media.alt} loading="lazy" />
+    )}
+</section>
+
+<style>
+  .teaser {
+    margin-top: -15dvh;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .teaser-media {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    .teaser {
+      padding: 0 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .teaser {
+      padding: 0 12px;
+    }
+  }
+</style>

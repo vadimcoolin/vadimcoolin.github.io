@@ -1,0 +1,37 @@
+---
+interface Props {
+  title: string;
+  body: string[];
+  /** When `false`, omits default block margins around the body. Defaults to `true`. */
+  bodyMargins?: boolean;
+  /** When `false`, omits bottom margin under the body block. Defaults to `true`. */
+  bodyMarginBottom?: boolean;
+  /**
+   * When `true`, renders the title as `<h3 class="h2">` for an in-section subsection
+   * (same typography as the default intro title; avoids a second section-level `h2`).
+   */
+  sub?: boolean;
+}
+
+const { title, body, bodyMargins = true, bodyMarginBottom = true, sub = false } = Astro.props;
+---
+
+<div class="grid grid-cols-12 gap-6">
+  <div class="col-span-10 col-start-2 text-center">
+    {
+      sub ? (
+        <h3 class="h2">{title}</h3>
+      ) : (
+        <h2 class="h2">{title}</h2>
+      )
+    }
+    <div
+      class:list={[
+        bodyMargins && "mt-10",
+        bodyMargins && bodyMarginBottom && "mb-12",
+      ]}
+    >
+      {body.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+  </div>
+</div>

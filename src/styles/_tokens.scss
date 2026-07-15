@@ -1,0 +1,28 @@
+:root {
+  --color-bg: #e0e0e0;
+  --color-surface: #eaeaea;
+  --color-surface-strong: #1e1f20;
+  --color-text: #1e1f20;
+  --color-text-muted: rgba(30, 31, 32, 0.6);
+  --color-border: #b0b0b0;
+  --color-accent: #1e1f20;
+
+  --font-heading: "BDO Grotesk", "Inter", "Segoe UI", sans-serif;
+  --font-body: "BDO Grotesk", "Inter", "Segoe UI", sans-serif;
+
+  --radius-image: 12px;
+  --radius-button: 6px;
+  --shadow-default: 0 1px 3px rgb(0 0 0 / 6%), 0 1px 2px rgb(0 0 0 / 4%);
+
+  --layout-max: 80rem;
+  --layout-grid-gutter: 1.5rem;
+  --layout-grid-columns: 12;
+  --button-min-width-2cols: calc(
+    (var(--layout-max) - (var(--layout-grid-columns) - 1) * var(--layout-grid-gutter)) /
+      var(--layout-grid-columns) * 2 + var(--layout-grid-gutter)
+  );
+  --layout-col-1-plus-gutter: calc(
+    (var(--layout-max) - (var(--layout-grid-columns) - 1) * var(--layout-grid-gutter)) /
+      var(--layout-grid-columns) + var(--layout-grid-gutter)
+  );
+}

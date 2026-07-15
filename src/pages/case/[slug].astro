@@ -1,0 +1,34 @@
+---
+import CaseHeroBlock from "../../components/blocks/CaseHeroBlock.astro";
+import CaseNavBlock from "../../components/blocks/CaseNavBlock.astro";
+import PageTemplate from "../../layouts/PageTemplate.astro";
+import { caseStudies, getPrevNext } from "../../data/caseStudies";
+import type { CaseStudyEntry } from "../../data/types";
+
+export function getStaticPaths() {
+  return caseStudies
+    .filter((cs) => !cs.disabled)
+    .map((cs) => ({
+      params: { slug: cs.slug },
+      props: { caseData: cs },
+    }));
+}
+
+interface Props {
+  caseData: CaseStudyEntry;
+}
+
+const { caseData } = Astro.props;
+const { prev, next } = getPrevNext(caseData.slug);
+---
+
+<PageTemplate title={`${caseData.title} — Vadim Coolin`}>
+  <CaseHeroBlock content={caseData} />
+  <CaseNavBlock prev={prev} next={next} />
+</PageTemplate>
+
+<style>
+  :global(footer) {
+    margin-top: 64px !important;
+  }
+</style>

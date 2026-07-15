@@ -1,0 +1,9 @@
+---
+import PortfolioGridBlock from "../components/blocks/PortfolioGridBlock.astro";
+import PageTemplate from "../layouts/PageTemplate.astro";
+import { portfolioPageContent } from "../data/pages/portfolio";
+---
+
+<PageTemplate title="Portfolio — Your Name">
+  <PortfolioGridBlock content={portfolioPageContent} />
+</PageTemplate>

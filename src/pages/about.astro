@@ -1,0 +1,14 @@
+---
+import AboutBlock from "../components/blocks/AboutBlock.astro";
+import LogoMarqueeBlock from "../components/blocks/LogoMarqueeBlock.astro";
+import ContactBlock from "../components/blocks/ContactBlock.astro";
+import PageTemplate from "../layouts/PageTemplate.astro";
+import { aboutPageContent, logosSection } from "../data/pages/about";
+import { contactSection } from "../data/pages/home";
+---
+
+<PageTemplate title="About — Vadim Coolin">
+  <AboutBlock content={aboutPageContent} />
+  <LogoMarqueeBlock content={logosSection} />
+  <ContactBlock content={contactSection} />
+</PageTemplate>

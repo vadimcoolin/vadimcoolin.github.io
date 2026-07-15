@@ -1,0 +1,25 @@
+.form-field {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  border: 0;
+  border-bottom: 0.125rem solid var(--color-border);
+  background-color: transparent;
+  padding-inline: 0;
+  padding-block: 1.375rem;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 450;
+  line-height: normal;
+  color: var(--color-text);
+  outline: none;
+}
+
+.form-field::placeholder {
+  color: var(--color-text-muted);
+}
+
+.form-field:focus-visible {
+  background-color: color-mix(in srgb, var(--color-accent) 5%, transparent);
+}

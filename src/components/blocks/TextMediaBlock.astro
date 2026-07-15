@@ -1,0 +1,56 @@
+---
+import Button from "../ui/Button.astro";
+import Section from "../ui/Section.astro";
+import type { TextMediaSectionContent } from "../../data/types";
+
+interface Props {
+  content: TextMediaSectionContent;
+}
+
+const { content } = Astro.props;
+const mediaOnLeft = (content.mediaSide ?? "left") === "left";
+---
+
+<Section
+  id={content.id}
+  topSpacing={content.topSpacing}
+  surface={content.surface}
+  backgroundMedia={content.backgroundMedia}
+  container={content.container}
+  containerClass={content.containerClass}
+>
+  <div class="grid grid-cols-1 items-start gap-12 lg:grid-cols-12">
+    <!-- Media first in DOM so single-column layout shows image above copy when media is on the left. -->
+    <div
+      class:list={[
+        "col-span-1",
+        "lg:col-span-6",
+        "lg:row-start-1",
+        mediaOnLeft ? "lg:col-start-2" : "lg:col-start-6 order-2 lg:order-none",
+      ]}
+    >
+      <div class="aspect-[628/471] overflow-hidden rounded-[var(--radius-image)] shadow-[var(--shadow-default)]">
+        <img src={content.media.src} alt={content.media.alt} class="h-full w-full object-cover" loading="lazy" />
+      </div>
+    </div>
+    <div
+      class:list={[
+        "col-span-1",
+        "lg:col-span-5",
+        "lg:row-start-1",
+        "lg:pt-16",
+        mediaOnLeft ? "lg:col-start-8 lg:pl-8" : "lg:col-start-1 lg:pr-8 order-1 lg:order-none",
+      ]}
+    >
+      <div class="flex flex-col gap-10">
+        <h2 class="h2">{content.title}</h2>
+        <div>
+          {content.body.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+        <div>
+          <Button href={content.action.href}>{content.action.label}</Button>
+        </div>
+      </div>
+    </div>
+  </div>
+</Section>

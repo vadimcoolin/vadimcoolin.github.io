@@ -1,0 +1,130 @@
+---
+import type { PortfolioGridSectionContent } from "../../data/types";
+
+interface Props {
+  content: PortfolioGridSectionContent;
+}
+
+const { content } = Astro.props;
+const imgBase = import.meta.env.BASE_URL;
+---
+
+<section class="projects" id={content.id}>
+  <h2 class="section-title">{content.title}</h2>
+  <div class="cards-grid">
+    {content.projects.map((project) => (
+      project.disabled ? (
+        <div class="card card--hidden" aria-hidden="true"></div>
+      ) : (
+        <a href={imgBase + "/" + project.href.replace(/^\//, "")} class="card">
+          <div class="card-image" style={{ aspectRatio: project.aspectRatio || "3/4" }}>
+            <img
+              src={imgBase + "/" + project.image.src.replace(/^\//, "")}
+              alt={project.image.alt}
+              loading="lazy"
+            />
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">{project.title}</h3>
+            <p class="card-subtitle">{project.subtitle}</p>
+          </div>
+        </a>
+      )
+    ))}
+  </div>
+</section>
+
+<style>
+  .projects {
+    padding: 0 24px 24px;
+    margin-top: 200px;
+    scroll-margin-top: 96px;
+  }
+
+  .section-title {
+    font-family: var(--font-heading);
+    font-size: 54px;
+    font-weight: 400;
+    line-height: 1.1;
+    margin: 0 0 24px;
+    color: var(--color-text);
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .card {
+    display: block;
+    text-decoration: none;
+    color: var(--color-text);
+  }
+
+  .card--hidden {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .card-image {
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .card:hover .card-image img {
+    transform: scale(1.06);
+  }
+
+  .card-body {
+    padding-top: 24px;
+  }
+
+  .card-title {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 8px;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .card:hover .card-title {
+    opacity: 0.6;
+  }
+
+  .card-subtitle {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  @media (max-width: 900px) {
+    .cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .cards-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .section-title {
+      font-size: 36px;
+    }
+  }
+</style>

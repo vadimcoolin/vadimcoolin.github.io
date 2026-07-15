@@ -1,0 +1,32 @@
+---
+import Section from "../ui/Section.astro";
+import type { BannerSectionContent } from "../../data/types";
+
+interface Props {
+  content: BannerSectionContent;
+}
+
+const { content } = Astro.props;
+const fetchPriority = content.fetchPriority;
+---
+
+<Section
+  id={content.id}
+  topSpacing={content.topSpacing}
+  surface={content.surface}
+  backgroundMedia={content.backgroundMedia}
+  container={false}
+  containerClass={content.containerClass}
+>
+  <div class="w-full">
+    <img
+      src={content.media.src}
+      alt={content.media.alt}
+      class="block h-auto w-full"
+      loading={content.loading ?? "lazy"}
+      width={content.media.width}
+      height={content.media.height}
+      {...fetchPriority ? { fetchpriority: fetchPriority } : {}}
+    />
+  </div>
+</Section>
