@@ -97,26 +97,39 @@ This document defines implementation conventions and editing guardrails for AI a
 - Non-programmer — needs explanations, not just code
 - Works via GitHub web interface (uploads files directly, no git CLI)
 - Uses opencode Windows desktop app
-- Site URL: https://vadimcoolin.github.io/portfolio/
-- Repo: https://github.com/vadimcoolin/portfolio
+- **NEW** — Switched from subpath `/portfolio/` to ROOT domain
+- Site URL: https://vadimcoolin.github.io/
+- Repo: https://github.com/vadimcoolin/vadimcoolin.github.io
+- Project folder: `F:\Work\Dev\Coolin\vadimcoolin.github.io`
 - Node.js at `C:\Program Files\nodejs\npm.cmd` (not in PATH)
 
-### Project status — DONE
+### What was done this session
+1. **Moved project** from `F:\Work\Dev\Coolin\portfolio` to `F:\Work\Dev\Coolin\vadimcoolin.github.io`
+2. **Removed** `base: "/portfolio"` from `astro.config.mjs` — site now at root domain
+3. **Fixed all BASE_URL handling** — all components now strip trailing slash from `import.meta.env.BASE_URL` so it works both with and without base path
+4. **Verified build** — all URLs now correct (e.g. `/images/...` instead of `/portfolio/images/...`)
+5. **Updated `.git-ready\`** — 13 files ready for upload to new repo
+
+### Project status
 - All pages working: home, about, portfolio, contact, case studies (case-01, case-02, case-03, case-05, case-06; case-04 disabled)
-- Nav links, images, case study links all use correct base URL (`/portfolio/...`)
-- `BASE_URL` bug fixed across all components: all `imgBase + path` now use `/` separator → `imgBase + "/" + path`
-- GitHub Actions workflow at `.github/workflows/deploy.yml` — builds on push to `main` and deploys to Pages
+- All links point to root domain: `/about`, `/contact`, `/case/case-01`, etc.
+- BASE_URL handling standardized: `import.meta.env.BASE_URL.replace(/\/$/, "") + "/" + path`
+- GitHub Actions workflow at `.github/workflows/deploy.yml` — builds on push to `main`
 - `dist/` builds successfully with `npm run build`
+- `node_modules/` and `.astro/` are hidden in Windows File Explorer
 
 ### Pending actions
-1. **Upload `portfolio-ready/` files to GitHub** — 10 fixed files that need to be uploaded to trigger new deploy (includes prev arrow fix and MainLayout favicon/og:image fixes)
-2. The user may have further requests after deployment verification
+1. **Upload `.git-ready\` files to GitHub** — drag entire contents to `vadimcoolin.github.io` repo
+2. **IMPORTANT**: `.github/` folder must be uploaded too (it contains the workflow file)
+   - If `.github` isn't visible in the upload, create the file manually at `https://github.com/vadimcoolin/vadimcoolin.github.io/new/main/.github/workflows/deploy.yml` — paste content from `.git-ready\.github\workflows\deploy.yml`
+3. **Delete old repo** `vadimcoolin/portfolio` after verifying new site works
+4. After upload, GitHub Actions will auto-build and deploy to https://vadimcoolin.github.io/
 
 ### Notes for next session
 - User communicates in Ukrainian/Russian mix
 - Check `AGENTS.md` for full conventions before making changes
-- All source files are at `F:\Work\Dev\Coolin\portfolio`
-- `portfolio-ready\` inside that folder contains only changed files ready for GitHub upload
+- All source files at `F:\Work\Dev\Coolin\vadimcoolin.github.io`
+- `.git-ready\` inside that folder contains only changed files for GitHub upload
 - `public/images/logos/` — brand logos (8 SVGs) used in About page marquee
 - `public/images/icons/arrow-left.svg` — navigation arrow (right arrow uses `scaleX(-1)`)
 - All case study images at `public/images/content/case01/`..`case06/`

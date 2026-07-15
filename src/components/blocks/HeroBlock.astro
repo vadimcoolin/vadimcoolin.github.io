@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { content } = Astro.props;
-const logoUrl = import.meta.env.BASE_URL + "/" + content.logo.src.replace(/^\//, "");
+const logoUrl = import.meta.env.BASE_URL.replace(/\/$/, "") + "/" + content.logo.src.replace(/^\//, "");
 ---
 
 <section class="hero">
