@@ -13,7 +13,7 @@ const isVideo = content.mediaType === "video";
 <section class="teaser">
   {
     isVideo ? (
-      <video class="teaser-media" src={mediaUrl} muted playsinline loop />
+      <video class="teaser-media" src={mediaUrl} autoplay muted playsinline loop />
     ) : (
       <img class="teaser-media" src={mediaUrl} alt={content.media.alt} loading="lazy" />
     )}
@@ -21,7 +21,7 @@ const isVideo = content.mediaType === "video";
 
 <style>
   .teaser {
-    margin-top: -15dvh;
+    margin-top: -5dvh;
     padding: 0 24px;
     position: relative;
     z-index: 1;
@@ -31,6 +31,7 @@ const isVideo = content.mediaType === "video";
     display: block;
     width: 100%;
     height: auto;
+    aspect-ratio: 16 / 9;
   }
 
   @media (max-width: 768px) {

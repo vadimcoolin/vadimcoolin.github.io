@@ -1,6 +1,6 @@
 import type { TeaserSectionContent } from "../../types";
 
 export const teaserSection: TeaserSectionContent = {
-  media: { src: "/images/video.jpg", alt: "Teaser" },
-  mediaType: "image",
+  media: { src: "/showreel.mp4", alt: "Showreel" },
+  mediaType: "video",
 };

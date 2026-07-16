@@ -28,6 +28,9 @@ interface BaseSectionContent {
 
 export interface HeroSectionContent {
   logo: { src: string; alt: string };
+  titleLines: string[];
+  avatar: { src: string; alt: string };
+  avatarText: string;
 }
 
 export interface AboutSectionContent {
