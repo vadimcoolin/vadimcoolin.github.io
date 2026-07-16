@@ -69,10 +69,13 @@ const isExternal = (href: string) => href.startsWith("http");
       <p class="footer-copyright">&copy;2026 Vadim Coolin. All rights reserved.</p>
     </div>
   )}
-  <div class="footer-logo-wrap">
-    <img src={logoUrl} alt="Vadim Coolin logo" class="footer-logo" />
-  </div>
 </footer>
+
+<div class="footer-logo-fixed" id="footer-logo-fixed">
+  <img src={logoUrl} alt="" class="footer-logo-img" />
+</div>
+
+<div class="footer-scroll-buffer" id="footer-scroll-buffer"></div>
 
 <style>
   .footer {
@@ -144,16 +147,27 @@ const isExternal = (href: string) => href.startsWith("http");
     white-space: nowrap;
   }
 
-  .footer-logo-wrap {
-    width: 100%;
-    margin-top: 200px;
-    padding-bottom: 24px;
+  .footer-logo-fixed {
+    position: fixed;
+    bottom: 24px;
+    left: 24px;
+    width: calc(100% - 48px);
+    height: 0;
+    z-index: 10;
+    pointer-events: none;
+    transform-origin: 50% 100%;
+    transform: scaleY(0);
   }
 
-  .footer-logo {
+  .footer-logo-img {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
+  }
+
+  .footer-scroll-buffer {
+    height: 500px;
+    pointer-events: none;
   }
 
   @media (max-width: 1024px) {
@@ -189,3 +203,39 @@ const isExternal = (href: string) => href.startsWith("http");
     }
   }
 </style>
+
+<script>
+  (function () {
+    var fixed = document.getElementById("footer-logo-fixed");
+    var buffer = document.getElementById("footer-scroll-buffer");
+    if (!fixed || !buffer) return;
+
+    var BUFFER_HEIGHT = 500;
+    var logoHeight = 0;
+
+    function calcHeight() {
+      var w = fixed.offsetWidth;
+      if (w <= 0) w = window.innerWidth;
+      logoHeight = Math.max(1, Math.round(w * 378 / 1873));
+      fixed.style.height = logoHeight + "px";
+    }
+
+    function onScroll() {
+      var bufferTop = buffer.offsetTop;
+      var viewportBottom = window.scrollY + window.innerHeight;
+      var scrolledIntoBuffer = viewportBottom - bufferTop;
+      var progress = Math.max(0, Math.min(1, scrolledIntoBuffer / BUFFER_HEIGHT));
+      fixed.style.transform = "scaleY(" + progress + ")";
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", function () {
+      calcHeight();
+      onScroll();
+    }, { passive: true });
+
+    calcHeight();
+    onScroll();
+  })();
+</script>
+
