@@ -177,19 +177,12 @@ const resolveHref = (href: string) => {
   .nav-cta {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 0.5rem;
-    height: 40px;
-    padding: 0 24px;
-    background: #000;
-    color: var(--color-bg);
-    font-family: var(--font-body);
-    font-size: 16px;
-    font-weight: 400;
+    font-family: var(--font-heading);
+    font-size: clamp(0.875rem, 1.25vw, 24px);
+    font-weight: 800;
     text-decoration: none;
-    border: none;
-    border-radius: 9999px;
-    line-height: 1;
+    color: var(--color-text);
     transition: opacity 0.2s ease;
   }
 

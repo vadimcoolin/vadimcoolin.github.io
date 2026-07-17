@@ -66,6 +66,12 @@ const allLogos = [...content.logos, ...content.logos];
     }
   }
 
+  @media (max-width: 768px) {
+    .marquee {
+      padding: 0 12px;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .marquee-content {
       animation: none;

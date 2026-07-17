@@ -55,7 +55,6 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
   .case-nav {
     display: flex;
     justify-content: space-between;
-    margin-top: 140px;
     padding: 0 24px;
   }
 
@@ -113,5 +112,16 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   .case-nav-link:hover .case-nav-preview {
     transform: scale(1.06);
+  }
+
+  @media (max-width: 768px) {
+    .case-nav-prev {
+      display: none;
+    }
+
+    .case-nav {
+      justify-content: flex-end;
+      padding: 0 12px;
+    }
   }
 </style>

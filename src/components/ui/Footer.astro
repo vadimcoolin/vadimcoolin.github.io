@@ -167,7 +167,7 @@ const isExternal = (href: string) => href.startsWith("http");
   }
 
   .footer-scroll-buffer {
-    height: 250px;
+    height: 500px;
     pointer-events: none;
   }
 
@@ -178,6 +178,10 @@ const isExternal = (href: string) => href.startsWith("http");
 
     .footer-cols {
       gap: 8px;
+    }
+
+    .footer-scroll-buffer {
+      height: 400px;
     }
   }
 
@@ -195,12 +199,26 @@ const isExternal = (href: string) => href.startsWith("http");
     .footer-copyright {
       white-space: normal;
     }
+
+    .footer-scroll-buffer {
+      height: 300px;
+    }
   }
 
   @media (max-width: 480px) {
     .footer-cols {
       flex-direction: column;
       gap: 32px;
+    }
+
+    .footer-scroll-buffer {
+      height: 200px;
+    }
+  }
+
+  @media (min-width: 1921px) {
+    .footer-scroll-buffer {
+      height: 700px;
     }
   }
 </style>
@@ -211,8 +229,25 @@ const isExternal = (href: string) => href.startsWith("http");
     var buffer = document.getElementById("footer-scroll-buffer");
     if (!fixed || !buffer) return;
 
-    var BUFFER_HEIGHT = 250;
+    // Breakpoint config: [maxWidth, deadZone]
+    // Tune deadZone per breakpoint as needed
+    var BREAKPOINTS = [
+      { max: 480, deadZone: 50 },
+      { max: 768, deadZone: 80 },
+      { max: 1024, deadZone: 160 },
+      { max: 1920, deadZone: 250 },
+      { max: Infinity, deadZone: 400 },
+    ];
+
     var logoHeight = 0;
+
+    function getDeadZone() {
+      var w = window.innerWidth;
+      for (var i = 0; i < BREAKPOINTS.length; i++) {
+        if (w <= BREAKPOINTS[i].max) return BREAKPOINTS[i].deadZone;
+      }
+      return 250;
+    }
 
     function calcHeight() {
       var w = fixed.offsetWidth;
@@ -222,9 +257,12 @@ const isExternal = (href: string) => href.startsWith("http");
     }
 
     function onScroll() {
+      var bufferH = buffer.offsetHeight;
       var bufferTop = buffer.offsetTop;
       var viewportBottom = window.scrollY + window.innerHeight;
-      var progress = Math.max(0, Math.min(1, (viewportBottom - bufferTop) / BUFFER_HEIGHT));
+      var deadZone = getDeadZone();
+      var scrolledIntoBuffer = viewportBottom - bufferTop - deadZone;
+      var progress = Math.max(0, Math.min(1, scrolledIntoBuffer / (bufferH - deadZone)));
       if (progress > 0.98) progress = 1;
       fixed.style.transform = "scaleY(" + progress + ")";
     }
@@ -236,6 +274,5 @@ const isExternal = (href: string) => href.startsWith("http");
     }, { passive: true });
 
     calcHeight();
-    onScroll();
-  })();
+    onScroll();  })();
 </script>

@@ -10,8 +10,6 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
 ---
 
 <section class="case-hero">
-  <h1 class="case-title">{content.title}</h1>
-  <p class="case-desc">{content.description}</p>
   <div class="case-teaser">
     <img
       class="case-teaser-img"
@@ -19,20 +17,34 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
       alt={content.teaserImage.alt}
     />
   </div>
+  <h1 class="case-title">{content.title}</h1>
+  <p class="case-desc">{content.description}</p>
 </section>
 
 <style>
   .case-hero {
     padding: 0 24px;
-    margin-top: 300px;
+    margin-bottom: 288px;
+  }
+
+  .case-teaser {
+    max-height: calc(100vh - 104px);
+    overflow: hidden;
+  }
+
+  .case-teaser-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .case-title {
+    margin: 84px 0 0;
     font-family: "BDO Grotesk Black", "BDO Grotesk", "Inter", sans-serif;
     font-weight: 900;
-    font-size: 120px;
+    font-size: 96px;
     line-height: 1;
-    margin: 0;
     color: var(--color-text);
   }
 
@@ -46,36 +58,77 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
     color: var(--color-text);
   }
 
-  .case-teaser {
-    margin-top: 140px;
-  }
+  @media (max-width: 1200px) {
+    .case-hero {
+      margin-bottom: 216px;
+    }
 
-  .case-teaser-img {
-    display: block;
-    width: 100%;
-    height: auto;
+    .case-title {
+      font-size: 72px;
+      margin-top: 64px;
+    }
+
+    .case-desc {
+      font-size: 30px;
+    }
   }
 
   @media (max-width: 1024px) {
+    .case-hero {
+      margin-bottom: 160px;
+    }
+
+    .case-title {
+      font-size: 56px;
+      margin-top: 48px;
+    }
+
     .case-desc {
       max-width: 85%;
+      font-size: 26px;
     }
   }
 
   @media (max-width: 768px) {
+    .case-hero {
+      padding: 0 12px;
+      margin-bottom: 120px;
+    }
+
+    .case-teaser {
+      max-height: none;
+      overflow: visible;
+    }
+
+    .case-teaser-img {
+      height: auto;
+      object-fit: none;
+    }
+
     .case-title {
-      font-size: 64px;
+      font-size: 42px;
+      margin-top: 32px;
     }
 
     .case-desc {
       max-width: 100%;
-      font-size: 24px;
+      font-size: 22px;
+      margin-top: 16px;
     }
   }
 
   @media (max-width: 480px) {
+    .case-hero {
+      margin-bottom: 80px;
+    }
+
     .case-title {
-      font-size: 42px;
+      font-size: 32px;
+      margin-top: 24px;
+    }
+
+    .case-desc {
+      font-size: 18px;
     }
   }
 </style>

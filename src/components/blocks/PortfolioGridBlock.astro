@@ -99,7 +99,7 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 <style>
   .projects {
-    padding: 0 12px 24px;
+    padding: 0 24px 24px;
     margin-top: 192px;
     scroll-margin-top: 96px;
   }
@@ -187,6 +187,10 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
   }
 
   @media (max-width: 768px) {
+    .projects {
+      padding: 0 12px 24px;
+    }
+
     .card {
       transform: none;
       opacity: 1;

@@ -23,12 +23,24 @@ const { prev, next } = getPrevNext(caseData.slug);
 ---
 
 <PageTemplate title={`${caseData.title} — Vadim Coolin`}>
-  <CaseHeroBlock content={caseData} />
-  <CaseNavBlock prev={prev} next={next} />
+  <div class="case-page">
+    <CaseHeroBlock content={caseData} />
+    <CaseNavBlock prev={prev} next={next} />
+  </div>
 </PageTemplate>
 
 <style>
+  .case-page {
+    padding-top: 80px;
+  }
+
+  @media (max-width: 768px) {
+    .case-page {
+      padding-top: 60px;
+    }
+  }
+
   :global(footer) {
-    margin-top: 64px !important;
+    margin-top: 96px !important;
   }
 </style>
