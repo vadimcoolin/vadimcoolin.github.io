@@ -4,7 +4,7 @@ export const footerSection: FooterSectionContent = {
   columns: {
     sitemap: [
       { label: "Index", href: "/" },
-      { label: "Portfolio", href: "#projects" },
+      { label: "Portfolio", href: "/projects" },
       { label: "About", href: "/about" },
       { label: "Contact", href: "/contact" },
     ],

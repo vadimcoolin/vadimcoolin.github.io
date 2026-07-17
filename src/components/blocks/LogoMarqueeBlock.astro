@@ -27,7 +27,7 @@ const allLogos = [...content.logos, ...content.logos];
 
 <style>
   .marquee {
-    margin-top: 140px;
+    margin-top: 96px;
     padding: 0 24px;
     overflow: hidden;
   }
@@ -49,6 +49,11 @@ const allLogos = [...content.logos, ...content.logos];
     height: 55%;
     width: auto;
     flex-shrink: 0;
+    filter: brightness(0);
+    transition: filter 0.25s ease;
+  }
+
+  .marquee-logo:hover {
     filter: brightness(0) invert(57.5%);
   }
 

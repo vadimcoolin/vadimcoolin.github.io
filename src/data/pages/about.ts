@@ -1,10 +1,23 @@
-import type { AboutSectionContent, LogoMarqueeSectionContent } from "../types";
+import type { AboutSectionContent, LogoMarqueeSectionContent, IndustryExpertiseContent } from "../types";
 
 export const aboutPageContent: AboutSectionContent = {
   id: "about",
   body: [
-    "I turn creative chaos into scalable design systems, leading teams of 12+ and shipping brand and product work for Visa, PepsiCo, Mars, and Nestle.",
-    "15+ years across Tech Holdings, IT Products, and top-tier agency networks (BBDO, DDB, Adventa, McCann), I bridge brand identity with high-end web and digital product design — connecting creative execution to business objectives. Built and led design departments of up to 12+ specialists across 10+ brands, launched 3 apps and 3 e-com stores from scratch, and set up DesignOps pipelines from zero to scale.",
+    "15+ years across Tech Holdings, IT Products, and top-tier agency networks (BBDO, DDB, Adventa, McCann), I bridge brand identity with high-end web and digital product design — connecting creative execution to business objectives. Built and led design departments of up to 12+ specialists across 10+ brands, launched 2 apps and 1 e-com store from scratch, and set up DesignOps pipelines from zero to scale.",
+  ],
+};
+
+export const industrySection: IndustryExpertiseContent = {
+  label: "Industry Expertise",
+  items: [
+    "FinTech & Crypto",
+    "E-Commerce & Retail",
+    "Phygital & IoT",
+    "SaaS & IT Products",
+    "Food & Beverage",
+    "Telecom",
+    "HORECA",
+    "Advertising",
   ],
 };
 

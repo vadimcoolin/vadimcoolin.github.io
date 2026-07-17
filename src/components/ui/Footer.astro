@@ -83,7 +83,7 @@ const isExternal = (href: string) => href.startsWith("http");
   }
 
   .footer--default {
-    margin-top: 140px;
+    margin-top: 96px;
   }
 
   .footer--simple {
@@ -224,8 +224,8 @@ const isExternal = (href: string) => href.startsWith("http");
     function onScroll() {
       var bufferTop = buffer.offsetTop;
       var viewportBottom = window.scrollY + window.innerHeight;
-      var scrolledIntoBuffer = viewportBottom - bufferTop;
-      var progress = Math.max(0, Math.min(1, scrolledIntoBuffer / BUFFER_HEIGHT));
+      var scrolledIntoBuffer = viewportBottom - bufferTop - 250;
+      var progress = Math.max(0, Math.min(1, scrolledIntoBuffer / (BUFFER_HEIGHT - 250)));
       if (progress > 0.98) progress = 1;
       fixed.style.transform = "scaleY(" + progress + ")";
     }

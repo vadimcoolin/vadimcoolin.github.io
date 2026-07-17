@@ -1,6 +1,9 @@
 import type { ContactSectionContent } from "../../types";
 
 export const contactSection: ContactSectionContent = {
-  title: "Contact me for projects",
+  titleLines: [
+    "Have questions, ideas, or just curious?",
+    "Contact me!",
+  ],
   link: { label: "Contact", href: "/contact" },
 };

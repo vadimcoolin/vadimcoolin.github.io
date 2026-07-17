@@ -1,0 +1,274 @@
+---
+import PageTemplate from "../layouts/PageTemplate.astro";
+import { caseStudies } from "../data/caseStudies";
+
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
+const activeProjects = caseStudies.filter((cs) => !cs.disabled);
+---
+
+<PageTemplate title="Projects — Vadim Coolin">
+  <div class="projects-root" id="projects-root">
+    <section class="projects-page">
+      <div class="projects-list">
+        {activeProjects.map((project, i) => (
+          <a
+            href={baseUrl + "/case/" + project.slug}
+            class="project-link"
+            data-index={i}
+          >
+            <span class="hover-text">
+              <span class="hover-text-inner" data-text={project.title}>
+                {project.title}
+              </span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <div class="hover-reveal" id="hover-reveal" aria-hidden="true">
+      <div class="hover-reveal-track" id="hover-reveal-track">
+        {activeProjects.map((project, i) => (
+          <div class="hover-reveal-slide" data-index={i}>
+            <img
+              class="hover-reveal-img"
+              src={baseUrl + "/" + project.cardImage.src.replace(/^\//, "")}
+              alt=""
+              style={{ aspectRatio: project.aspectRatio || "3/4" }}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</PageTemplate>
+
+<script>
+  (function () {
+    var root = document.getElementById("projects-root");
+    var reveal = document.getElementById("hover-reveal");
+    var track = document.getElementById("hover-reveal-track");
+    var links = root.querySelectorAll(".project-link");
+    var slides = track.querySelectorAll(".hover-reveal-slide");
+    if (!root || !reveal || !track || !links.length || !slides.length) return;
+
+    var activeIndex = -1;
+    var mouseX = 0;
+    var mouseY = 0;
+    var posX = 0;
+    var posY = 0;
+    var IMG_W = 360;
+    var OFFSET_X = 120;
+    var OFFSET_Y = -80;
+
+    reveal.style.setProperty("--img-w", IMG_W + "px");
+
+    function activateIndex(index) {
+      slides.forEach(function (slide, i) {
+        slide.classList.toggle("active", i === index);
+      });
+    }
+
+    function updateRevealSize(index) {
+      var img = slides[index].querySelector(".hover-reveal-img");
+      if (img) {
+        var ar = img.style.aspectRatio || "3/4";
+        var parts = ar.split("/");
+        var h = IMG_W / parseFloat(parts[0]) * parseFloat(parts[1] || 1);
+        reveal.style.height = Math.round(h) + "px";
+      }
+    }
+
+    function setMousePos(e) {
+      var rect = root.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+    }
+
+    links.forEach(function (link, i) {
+      link.addEventListener("mouseenter", function (e) {
+        activeIndex = i;
+        setMousePos(e);
+        activateIndex(i);
+        updateRevealSize(i);
+        reveal.classList.add("is-visible");
+      });
+    });
+
+    root.addEventListener("mouseleave", function () {
+      activeIndex = -1;
+      reveal.classList.remove("is-visible");
+      slides.forEach(function (slide) {
+        slide.classList.remove("active");
+      });
+    });
+
+    root.addEventListener("mousemove", setMousePos);
+
+    var vx = 0;
+    var vy = 0;
+    var K = 60;
+    var C = 28;
+    var M = 0.5;
+    var lastTime = performance.now();
+
+    function tick() {
+      var now = performance.now();
+      var dt = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+
+      var dx = mouseX - posX;
+      var dy = mouseY - posY;
+
+      var ax = (K * dx - C * vx) / M;
+      var ay = (K * dy - C * vy) / M;
+
+      vx += ax * dt;
+      vy += ay * dt;
+      posX += vx * dt;
+      posY += vy * dt;
+
+      track.style.transform =
+        "translate(" + (posX + OFFSET_X) + "px, " + (posY + OFFSET_Y) + "px)";
+      requestAnimationFrame(tick);
+    }
+
+    tick();
+  })();
+</script>
+
+<style>
+  .projects-root {
+    position: relative;
+  }
+
+  .projects-page {
+    padding: 0 24px;
+    max-width: 75%;
+    margin-top: 192px;
+    margin-bottom: 192px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .projects-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .project-link {
+    display: block;
+    font-family: "BDO Grotesk Black", "BDO Grotesk", "Inter", sans-serif;
+    font-size: 96px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--color-text);
+    text-decoration: none;
+    overflow: hidden;
+  }
+
+  .project-link + .project-link {
+    margin-top: 12px;
+  }
+
+  .hover-text {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: middle;
+    line-height: inherit;
+  }
+
+  .hover-text-inner {
+    display: block;
+    position: relative;
+    line-height: 1;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .hover-text-inner::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: calc(100% + 6px);
+    white-space: nowrap;
+  }
+
+  .project-link:hover .hover-text-inner {
+    transform: translateY(calc(-100% - 6px));
+  }
+
+  .hover-reveal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--img-w, 360px);
+    height: 0;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transform: scale(0.92);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  .hover-reveal.is-visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .hover-reveal-track {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    will-change: transform;
+  }
+
+  .hover-reveal-slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    will-change: opacity;
+  }
+
+  .hover-reveal-slide.active {
+    opacity: 1;
+  }
+
+  .hover-reveal-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (max-width: 1024px) {
+    .projects-page {
+      max-width: 100%;
+    }
+
+    .project-link {
+      font-size: 64px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .project-link {
+      font-size: 48px;
+    }
+
+    .hover-reveal {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .project-link {
+      font-size: 36px;
+    }
+  }
+</style>

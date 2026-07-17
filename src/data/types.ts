@@ -145,8 +145,13 @@ export interface ContactPageContent {
   otherLinks: ContactPageLink[];
 }
 
+export interface IndustryExpertiseContent {
+  label: string;
+  items: string[];
+}
+
 export interface ContactSectionContent {
-  title: string;
+  titleLines: string[];
   link: { label: string; href: string };
 }
 

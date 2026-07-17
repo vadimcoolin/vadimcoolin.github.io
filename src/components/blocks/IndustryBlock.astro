@@ -1,0 +1,82 @@
+---
+import type { IndustryExpertiseContent } from "../../data/types";
+
+interface Props {
+  content: IndustryExpertiseContent;
+}
+
+const { content } = Astro.props;
+---
+
+<section class="industry">
+  <div class="industry-grid">
+    <p class="industry-label">{content.label}</p>
+    <div class="industry-list">
+      {content.items.map((item) => (
+        <span class="industry-item">{item}</span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .industry {
+    padding: 0 24px;
+    margin-top: 192px;
+  }
+
+  .industry-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+
+  .industry-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .industry-item {
+    font-family: "BDO Grotesk Black", "BDO Grotesk", "Inter", sans-serif;
+    font-size: 64px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--color-text);
+  }
+
+  .industry-label {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  @media (max-width: 1024px) {
+    .industry-item {
+      font-size: 48px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .industry-grid {
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .industry-item {
+      font-size: 32px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .industry-item {
+      font-size: 28px;
+    }
+  }
+</style>
