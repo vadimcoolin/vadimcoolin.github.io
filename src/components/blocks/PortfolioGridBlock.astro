@@ -12,17 +12,23 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
 <section class="projects" id={content.id}>
   <h2 class="section-title">{content.title}</h2>
   <div class="cards-grid">
-    {content.projects.map((project) => (
+    {content.projects.map((project, i) => (
       project.disabled ? (
         <div class="card card--hidden" aria-hidden="true"></div>
       ) : (
-        <a href={imgBase + "/" + project.href.replace(/^\//, "")} class="card">
-          <div class="card-image" style={{ aspectRatio: project.aspectRatio || "3/4" }}>
-            <img
-              src={imgBase + "/" + project.image.src.replace(/^\//, "")}
-              alt={project.image.alt}
-              loading="lazy"
-            />
+        <a
+          href={imgBase + "/" + project.href.replace(/^\//, "")}
+          class="card"
+          data-index={i}
+        >
+          <div class="card-image-wrap">
+            <div class="card-image" style={{ aspectRatio: project.aspectRatio || "3/4" }}>
+              <img
+                src={imgBase + "/" + project.image.src.replace(/^\//, "")}
+                alt={project.image.alt}
+                loading="lazy"
+              />
+            </div>
           </div>
           <div class="card-body">
             <h3 class="card-title">{project.title}</h3>
@@ -33,6 +39,70 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
     ))}
   </div>
 </section>
+
+<script>
+  const section = document.querySelector(".projects");
+  const cards = section?.querySelectorAll(".card:not(.card--hidden)");
+  if (!cards || cards.length === 0) { /* noop */ }
+
+  if (cards && cards.length > 0) {
+    const isMobile = window.innerWidth <= 768;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const card = entry.target as HTMLElement;
+            const index = parseInt(card.getAttribute("data-index") || "0");
+            const stagger = isMobile ? 0 : (index % 3) * 150;
+            setTimeout(() => {
+              card.classList.add("card--visible");
+            }, stagger);
+            observer.unobserve(card);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    cards.forEach((card) => observer.observe(card));
+
+    const handleScroll = () => {
+      const sectionRect = section.getBoundingClientRect();
+      const sectionTop = sectionRect.top;
+      const sectionHeight = sectionRect.height;
+      const vh = window.innerHeight;
+      const progress = Math.max(0, Math.min(1, (vh - sectionTop) / (sectionHeight + vh)));
+
+      cards.forEach((card) => {
+        const index = parseInt(card.getAttribute("data-index") || "0");
+        const col = index % 3;
+        const speeds = [1.6, 1.0, 0.4];
+        const speed = speeds[col];
+        const offset = (progress - 0.5) * 250 * speed;
+        card.style.setProperty("--parallax-y", `${offset}px`);
+
+        const imgOffset = (progress - 0.5) * 300;
+        card.style.setProperty("--img-parallax-y", `${imgOffset}px`);
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    const handleResize = () => {
+      const newIsMobile = window.innerWidth <= 768;
+      cards.forEach((card) => {
+        if (newIsMobile) {
+          card.classList.remove("card--visible");
+          card.style.removeProperty("--parallax-y");
+          card.style.removeProperty("--img-parallax-y");
+        }
+      });
+    };
+    window.addEventListener("resize", handleResize, { passive: true });
+  }
+</script>
 
 <style>
   .projects {
@@ -60,11 +130,25 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
     display: block;
     text-decoration: none;
     color: var(--color-text);
+    will-change: transform;
+    opacity: 0;
+    transform: translateY(48px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .card.card--visible {
+    opacity: 1;
+    transform: translateY(var(--parallax-y, 0px));
   }
 
   .card--hidden {
     visibility: hidden;
     pointer-events: none;
+  }
+
+  .card-image-wrap {
+    overflow: hidden;
+    width: 100%;
   }
 
   .card-image {
@@ -77,11 +161,13 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.4s ease;
+    will-change: transform;
+    transform: translateY(var(--img-parallax-y, 0px)) scale(1.12);
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   .card:hover .card-image img {
-    transform: scale(1.06);
+    transform: translateY(var(--img-parallax-y, 0px)) scale(1.06);
   }
 
   .card-body {
@@ -115,6 +201,19 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
   @media (max-width: 900px) {
     .cards-grid {
       grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .card {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .card-image img {
+      transform: none;
+      transition: none;
     }
   }
 
