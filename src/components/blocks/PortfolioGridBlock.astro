@@ -41,51 +41,45 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
 </section>
 
 <script>
-  const section = document.querySelector(".projects");
-  const cards = section?.querySelectorAll(".card:not(.card--hidden)");
+  const cards = document.querySelectorAll(".projects .card:not(.card--hidden)");
   if (!cards || cards.length === 0) { /* noop */ }
 
   if (cards && cards.length > 0) {
     const isMobile = window.innerWidth <= 768;
 
     if (!isMobile) {
-      const totalMove = 120;
-      const headerH = 96;
-      const colOffsets = [0, 120, 240];
-      const maxOffset = colOffsets[colOffsets.length - 1];
+      const halfCard = 450;
+      const colTotals = [120, 570, 1020];
+
+      const cardTops = [];
+      cards.forEach((card) => {
+        card.style.transform = "none";
+        cardTops.push(window.scrollY + card.getBoundingClientRect().top);
+      });
+
+      cards.forEach((card) => card.style.opacity = "1");
 
       const update = () => {
         const vh = window.innerHeight;
-        const entranceRange = Math.max(300, vh - headerH - maxOffset);
+        const scrollY = window.scrollY;
+        const fullRange = vh - 96;
 
-        cards.forEach((card) => {
-          const rect = card.getBoundingClientRect();
+        cards.forEach((card, i) => {
           const col = parseInt(card.getAttribute("data-index") || "0") % 3;
-          const fromBottom = vh - rect.top;
-          const offset = colOffsets[col];
+          const totalMove = colTotals[col];
+          const fromBottom = vh - (cardTops[i] - scrollY);
 
-          let raw = (fromBottom - offset) / entranceRange;
-          raw = Math.max(0, Math.min(1, raw));
-
-          let cardY = 120;
-          let cardO = "0";
-          if (raw >= 1) {
-            cardY = 0;
-            cardO = "1";
-          } else {
-            const eased = 1 - (1 - raw) * (1 - raw);
-            cardY = totalMove * (1 - eased);
-            cardO = String(Math.min(1, raw * 6));
-          }
+          let raw = fromBottom / fullRange;
+          raw = Math.min(1, Math.max(0, raw));
+          const cardY = totalMove * (1 - raw);
           card.style.transform = `translateY(${cardY}px)`;
-          card.style.opacity = cardO;
 
-          const totalVh = vh + rect.height;
-          const frameH = (card.querySelector(".card-image")?.offsetHeight || totalMove);
+          const rectH = card.getBoundingClientRect().height;
+          const totalVh = vh + rectH;
+          const frameH = (card.querySelector(".card-image")?.offsetHeight || 120);
           const imgExtra = frameH * 0.12;
           const rawImg = Math.max(0, Math.min(1, fromBottom / totalVh));
-          const imgY = rawImg * imgExtra;
-          card.style.setProperty("--img-parallax-y", `${imgY}px`);
+          card.style.setProperty("--img-parallax-y", `${rawImg * imgExtra}px`);
         });
       };
 
@@ -198,6 +192,7 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   @media (max-width: 768px) {
     .card {
+      transform: none;
       opacity: 1;
     }
 
