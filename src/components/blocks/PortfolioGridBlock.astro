@@ -48,57 +48,40 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
   if (cards && cards.length > 0) {
     const isMobile = window.innerWidth <= 768;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const card = entry.target as HTMLElement;
-            const index = parseInt(card.getAttribute("data-index") || "0");
-            const stagger = isMobile ? 0 : (index % 3) * 150;
-            setTimeout(() => {
-              card.classList.add("card--visible");
-            }, stagger);
-            observer.unobserve(card);
-          }
+    if (!isMobile) {
+      const staggerPx = 108;
+      const totalMove = 120;
+
+      const update = () => {
+        const vh = window.innerHeight;
+
+        cards.forEach((card) => {
+          const rect = card.getBoundingClientRect();
+          const fromBottom = vh - rect.top;
+          const col = parseInt(card.getAttribute("data-index") || "0") % 3;
+          const offset = col * staggerPx;
+          const raw = (fromBottom - offset) / vh;
+          const progress = Math.max(0, Math.min(1, raw));
+          const eased = 1 - (1 - progress) * (1 - progress);
+          const cardY = totalMove * (1 - eased);
+          card.style.transform = `translateY(${cardY}px)`;
+          const imgY = cardY * 1.5;
+          card.style.setProperty("--img-parallax-y", `${imgY}px`);
         });
-      },
-      { threshold: 0.15 }
-    );
+      };
 
-    cards.forEach((card) => observer.observe(card));
-
-    const handleScroll = () => {
-      const sectionRect = section.getBoundingClientRect();
-      const sectionTop = sectionRect.top;
-      const sectionHeight = sectionRect.height;
-      const vh = window.innerHeight;
-      const progress = Math.max(0, Math.min(1, (vh - sectionTop) / (sectionHeight + vh)));
-
-      cards.forEach((card) => {
-        const index = parseInt(card.getAttribute("data-index") || "0");
-        const col = index % 3;
-        const speeds = [1.6, 1.0, 0.4];
-        const speed = speeds[col];
-        const offset = (progress - 0.5) * 250 * speed;
-        card.style.setProperty("--parallax-y", `${offset}px`);
-
-        const imgOffset = (progress - 0.5) * 300;
-        card.style.setProperty("--img-parallax-y", `${imgOffset}px`);
-      });
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+      window.addEventListener("scroll", update, { passive: true });
+      update();
+    }
 
     const handleResize = () => {
       const newIsMobile = window.innerWidth <= 768;
-      cards.forEach((card) => {
-        if (newIsMobile) {
-          card.classList.remove("card--visible");
-          card.style.removeProperty("--parallax-y");
+      if (newIsMobile) {
+        cards.forEach((card) => {
+          card.style.removeProperty("transform");
           card.style.removeProperty("--img-parallax-y");
-        }
-      });
+        });
+      }
     };
     window.addEventListener("resize", handleResize, { passive: true });
   }
@@ -130,15 +113,7 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
     display: block;
     text-decoration: none;
     color: var(--color-text);
-    will-change: transform;
-    opacity: 0;
-    transform: translateY(48px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-
-  .card.card--visible {
-    opacity: 1;
-    transform: translateY(var(--parallax-y, 0px));
+    transform: translateY(120px);
   }
 
   .card--hidden {
@@ -163,11 +138,6 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
     object-fit: cover;
     will-change: transform;
     transform: translateY(var(--img-parallax-y, 0px)) scale(1.12);
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-
-  .card:hover .card-image img {
-    transform: translateY(var(--img-parallax-y, 0px)) scale(1.06);
   }
 
   .card-body {
@@ -206,14 +176,11 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   @media (max-width: 768px) {
     .card {
-      opacity: 1;
       transform: none;
-      transition: none;
     }
 
     .card-image img {
-      transform: none;
-      transition: none;
+      transform: scale(1.12);
     }
   }
 

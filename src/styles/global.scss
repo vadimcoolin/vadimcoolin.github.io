@@ -71,8 +71,26 @@ main:focus-visible {
   outline: none;
 }
 
+[data-magnetic] {
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translate(var(--magnetic-x, 0px), var(--magnetic-y, 0px));
+}
+
+[data-magnetic] .magnetic-label,
+[data-magnetic] .hover-text-inner {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: translate(var(--magnetic-label-x, 0px), var(--magnetic-label-y, 0px));
+}
+
 @media (prefers-reduced-motion: reduce) {
   .skip-link {
+    transition-duration: 0.01ms;
+  }
+
+  [data-magnetic],
+  [data-magnetic] .magnetic-label,
+  [data-magnetic] .hover-text-inner {
     transition-duration: 0.01ms;
   }
 }

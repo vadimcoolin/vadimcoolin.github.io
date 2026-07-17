@@ -68,5 +68,46 @@ const {
         });
       }
     </script>
+
+    <script is:inline>
+      const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      if (!isTouch && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        const magneticEls = Array.from(document.querySelectorAll("[data-magnetic]"));
+
+        document.addEventListener("mousemove", (e) => {
+          magneticEls.forEach((el) => {
+            const rect = el.getBoundingClientRect();
+            const zone = parseFloat(el.dataset.magneticZone || "1");
+            const halfW = (rect.width / 2) * zone;
+            const halfH = (rect.height / 2) * zone;
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const x = e.clientX - cx;
+            const y = e.clientY - cy;
+
+            if (Math.abs(x) <= halfW && Math.abs(y) <= halfH) {
+              const btnStrength = parseFloat(el.dataset.magneticStrength || "0.3");
+              const label = el.querySelector(".magnetic-label");
+              el.style.setProperty("--magnetic-x", `${x * btnStrength}px`);
+              el.style.setProperty("--magnetic-y", `${y * btnStrength}px`);
+
+              if (label) {
+                const labelStrength = parseFloat(el.dataset.magneticLabel || "0.6");
+                label.style.setProperty("--magnetic-label-x", `${x * labelStrength}px`);
+                label.style.setProperty("--magnetic-label-y", `${y * labelStrength}px`);
+              }
+            } else {
+              el.style.removeProperty("--magnetic-x");
+              el.style.removeProperty("--magnetic-y");
+              const label = el.querySelector(".magnetic-label");
+              if (label) {
+                label.style.removeProperty("--magnetic-label-x");
+                label.style.removeProperty("--magnetic-label-y");
+              }
+            }
+          });
+        });
+      }
+    </script>
   </body>
 </html>

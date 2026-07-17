@@ -16,9 +16,11 @@ const contactHref = baseUrl + "/" + content.link.href.replace(/^\//, "");
       <span class="contact-title-line">{line}</span>
     ))}
   </h2>
-  <a href={contactHref} class="contact-button">
-    {content.link.label}
-  </a>
+  <div class="contact-magnetic-zone" data-magnetic data-magnetic-zone="2">
+    <a href={contactHref} class="contact-button">
+      <span class="magnetic-label">{content.link.label}</span>
+    </a>
+  </div>
 </section>
 
 <style>
@@ -59,12 +61,11 @@ const contactHref = baseUrl + "/" + content.link.href.replace(/^\//, "");
     text-decoration: none;
     border: none;
     border-radius: 9999px;
-    transition: background 0.25s ease;
     cursor: pointer;
   }
 
-  .contact-button:hover {
-    background: #22c55e;
+  .contact-magnetic-zone {
+    display: inline-block;
   }
 
   @media (max-width: 600px) {
