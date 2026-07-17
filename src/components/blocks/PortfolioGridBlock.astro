@@ -45,57 +45,53 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
   if (!cards || cards.length === 0) { /* noop */ }
 
   if (cards && cards.length > 0) {
-    const isMobile = window.innerWidth <= 768;
+    const colTotals = [120, 570, 1020];
+    const cardTops = [];
+    cards.forEach((card) => {
+      card.style.transform = "none";
+      cardTops.push(window.scrollY + card.getBoundingClientRect().top);
+    });
+    cards.forEach((card) => card.style.opacity = "1");
 
-    if (!isMobile) {
-      const halfCard = 450;
-      const colTotals = [120, 570, 1020];
+    const update = () => {
+      const vh = window.innerHeight;
+      const scrollY = window.scrollY;
+      const fullRange = vh - 96;
+      const isMobile = window.innerWidth <= 768;
 
-      const cardTops = [];
-      cards.forEach((card) => {
-        card.style.transform = "none";
-        cardTops.push(window.scrollY + card.getBoundingClientRect().top);
-      });
+      cards.forEach((card, i) => {
+        const col = parseInt(card.getAttribute("data-index") || "0") % 3;
+        const fromBottom = vh - (cardTops[i] - scrollY);
 
-      cards.forEach((card) => card.style.opacity = "1");
-
-      const update = () => {
-        const vh = window.innerHeight;
-        const scrollY = window.scrollY;
-        const fullRange = vh - 96;
-
-        cards.forEach((card, i) => {
-          const col = parseInt(card.getAttribute("data-index") || "0") % 3;
+        if (!isMobile) {
           const totalMove = colTotals[col];
-          const fromBottom = vh - (cardTops[i] - scrollY);
-
           let raw = fromBottom / fullRange;
           raw = Math.min(1, Math.max(0, raw));
           const cardY = totalMove * (1 - raw);
           card.style.transform = `translateY(${cardY}px)`;
+        }
 
-          const rectH = card.getBoundingClientRect().height;
-          const totalVh = vh + rectH;
-          const frameH = (card.querySelector(".card-image")?.offsetHeight || 120);
-          const imgExtra = frameH * 0.12;
-          const rawImg = Math.max(0, Math.min(1, fromBottom / totalVh));
-          card.style.setProperty("--img-parallax-y", `${rawImg * imgExtra}px`);
-        });
-      };
+        const rectH = card.getBoundingClientRect().height;
+        const totalVh = vh + rectH;
+        const frameH = (card.querySelector(".card-image")?.offsetHeight || 120);
+        const imgExtra = frameH * 0.12;
+        const rawImg = Math.max(0, Math.min(1, fromBottom / totalVh));
+        card.style.setProperty("--img-parallax-y", `${rawImg * imgExtra}px`);
+      });
+    };
 
-      window.addEventListener("scroll", update, { passive: true });
-      update();
-    }
+    window.addEventListener("scroll", update, { passive: true });
+    update();
 
     const handleResize = () => {
-      const newIsMobile = window.innerWidth <= 768;
-      if (newIsMobile) {
-        cards.forEach((card) => {
-          card.style.removeProperty("transform");
-          card.style.removeProperty("opacity");
-          card.style.removeProperty("--img-parallax-y");
-        });
-      }
+      cards.forEach((card, i) => {
+        card.style.removeProperty("transform");
+        card.style.removeProperty("opacity");
+        card.style.removeProperty("--img-parallax-y");
+        card.style.transform = "none";
+        cardTops[i] = window.scrollY + card.getBoundingClientRect().top;
+      });
+      update();
     };
     window.addEventListener("resize", handleResize, { passive: true });
   }
@@ -120,7 +116,7 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
   .cards-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
+    gap: 48px;
   }
 
   .card {
@@ -157,7 +153,7 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
   }
 
   .card-body {
-    padding-top: 24px;
+    padding-top: 12px;
   }
 
   .card-title {
@@ -165,7 +161,7 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
     font-size: 24px;
     font-weight: 700;
     line-height: 1.2;
-    margin: 0 0 8px;
+    margin: 0 0 4px;
     color: var(--color-text);
     text-decoration: none;
     transition: opacity 0.2s ease;
@@ -194,10 +190,6 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
     .card {
       transform: none;
       opacity: 1;
-    }
-
-    .card-image img {
-      transform: scale(1.12);
     }
   }
 

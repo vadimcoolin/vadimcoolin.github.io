@@ -167,7 +167,7 @@ const isExternal = (href: string) => href.startsWith("http");
   }
 
   .footer-scroll-buffer {
-    height: 500px;
+    height: 250px;
     pointer-events: none;
   }
 
@@ -211,7 +211,7 @@ const isExternal = (href: string) => href.startsWith("http");
     var buffer = document.getElementById("footer-scroll-buffer");
     if (!fixed || !buffer) return;
 
-    var BUFFER_HEIGHT = 500;
+    var BUFFER_HEIGHT = 250;
     var logoHeight = 0;
 
     function calcHeight() {
@@ -224,8 +224,7 @@ const isExternal = (href: string) => href.startsWith("http");
     function onScroll() {
       var bufferTop = buffer.offsetTop;
       var viewportBottom = window.scrollY + window.innerHeight;
-      var scrolledIntoBuffer = viewportBottom - bufferTop - 250;
-      var progress = Math.max(0, Math.min(1, scrolledIntoBuffer / (BUFFER_HEIGHT - 250)));
+      var progress = Math.max(0, Math.min(1, (viewportBottom - bufferTop) / BUFFER_HEIGHT));
       if (progress > 0.98) progress = 1;
       fixed.style.transform = "scaleY(" + progress + ")";
     }
@@ -240,4 +239,3 @@ const isExternal = (href: string) => href.startsWith("http");
     onScroll();
   })();
 </script>
-
