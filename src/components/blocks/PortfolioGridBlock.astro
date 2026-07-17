@@ -49,23 +49,42 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
     const isMobile = window.innerWidth <= 768;
 
     if (!isMobile) {
-      const staggerPx = 108;
       const totalMove = 120;
+      const headerH = 96;
+      const colOffsets = [0, 120, 240];
+      const maxOffset = colOffsets[colOffsets.length - 1];
 
       const update = () => {
         const vh = window.innerHeight;
+        const entranceRange = Math.max(300, vh - headerH - maxOffset);
 
         cards.forEach((card) => {
           const rect = card.getBoundingClientRect();
-          const fromBottom = vh - rect.top;
           const col = parseInt(card.getAttribute("data-index") || "0") % 3;
-          const offset = col * staggerPx;
-          const raw = (fromBottom - offset) / vh;
-          const progress = Math.max(0, Math.min(1, raw));
-          const eased = 1 - (1 - progress) * (1 - progress);
-          const cardY = totalMove * (1 - eased);
+          const fromBottom = vh - rect.top;
+          const offset = colOffsets[col];
+
+          let raw = (fromBottom - offset) / entranceRange;
+          raw = Math.max(0, Math.min(1, raw));
+
+          let cardY = 120;
+          let cardO = "0";
+          if (raw >= 1) {
+            cardY = 0;
+            cardO = "1";
+          } else {
+            const eased = 1 - (1 - raw) * (1 - raw);
+            cardY = totalMove * (1 - eased);
+            cardO = String(Math.min(1, raw * 6));
+          }
           card.style.transform = `translateY(${cardY}px)`;
-          const imgY = cardY * 1.5;
+          card.style.opacity = cardO;
+
+          const totalVh = vh + rect.height;
+          const frameH = (card.querySelector(".card-image")?.offsetHeight || totalMove);
+          const imgExtra = frameH * 0.12;
+          const rawImg = Math.max(0, Math.min(1, fromBottom / totalVh));
+          const imgY = rawImg * imgExtra;
           card.style.setProperty("--img-parallax-y", `${imgY}px`);
         });
       };
@@ -79,6 +98,7 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
       if (newIsMobile) {
         cards.forEach((card) => {
           card.style.removeProperty("transform");
+          card.style.removeProperty("opacity");
           card.style.removeProperty("--img-parallax-y");
         });
       }
@@ -113,7 +133,9 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
     display: block;
     text-decoration: none;
     color: var(--color-text);
-    transform: translateY(120px);
+    opacity: 0;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
   }
 
   .card--hidden {
@@ -176,7 +198,7 @@ const imgBase = import.meta.env.BASE_URL.replace(/\/$/, "");
 
   @media (max-width: 768px) {
     .card {
-      transform: none;
+      opacity: 1;
     }
 
     .card-image img {
