@@ -465,15 +465,31 @@ void main() {
 
   @media (max-width: 768px) {
     .hero {
-      padding: 80px 16px calc(24px + 5dvh);
+      padding: 80px 16px calc(24px + 10dvh);
     }
 
     .hero-title p {
-      font-size: 24px;
+      font-size: 28px;
+    }
+
+    .hero-bottom {
+      display: contents;
+    }
+
+    .hero-logo {
+      order: 2;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: auto;
     }
 
     .hero-avatar-block {
-      max-width: 60%;
+      order: 3;
+      max-width: 75%;
+      margin: 0;
+      margin-left: 0;
     }
 
     .hero-avatar {
@@ -488,20 +504,20 @@ void main() {
 
   @media (max-width: 480px) {
     .hero {
-      padding: 72px 12px calc(24px + 5dvh);
+      padding: 72px 12px calc(24px + 10dvh);
     }
 
     .hero-title p {
-      font-size: 20px;
+      font-size: 24px;
     }
 
     .hero-avatar-block {
-      max-width: 100%;
+      max-width: 75%;
     }
 
     .hero-avatar {
-      width: 48px;
-      height: 48px;
+      width: 52px;
+      height: 52px;
     }
 
     .hero-avatar-text {
